@@ -19,41 +19,26 @@ public class Day2 {
         final int BLUESUM = 14;
         final int[] RGB = {REDSUM, GREENSUM, BLUESUM};
         while ((line = r.readLine()) != null) {
-            int[] nums = new int[3];
+            long[] nums = new long[3];
             st = new StringTokenizer(line);
             st.nextToken();
-            String a = st.nextToken();
-            int gameNo = Integer.parseInt(a.substring(0, a.length() - 1));
-            boolean flag = true;
-            boolean reset = false;
+            st.nextToken();
+            String a;
             while (st.hasMoreTokens()) {
-                if (reset) {
-                    nums = new int[3];
-                    reset = false;
-                }
                 int currentNo = Integer.parseInt(st.nextToken());
                 a = st.nextToken();
                 if (Character.isAlphabetic(a.charAt(a.length() - 1))) {
                     assert true;
-                } else if (a.charAt(a.length() - 1) == ';') {
-                    a = a.substring(0, a.length() - 1);
-                    reset = true;
                 } else {
                     a = a.substring(0, a.length() - 1);
                 }
-                nums[map.get(a)] += currentNo;
 
-                for (int i = 0; i < 3; i++) {
-                    if (!(RGB[i] >= nums[i])) {
-                        flag = false;
-                        break;
-                    }
+                if (nums[map.get(a)] < currentNo) {
+                    nums[map.get(a)] = currentNo;
                 }
+
             }
-            if (flag) {
-                //System.out.println(gameNo);
-                ans += gameNo;
-            }
+            ans += (nums[0] * nums[1] * nums[2]);
         }
         System.out.println(ans);
     }
