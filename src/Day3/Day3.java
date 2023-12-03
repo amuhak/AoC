@@ -17,7 +17,7 @@ public class Day3 {
         for (int i = 1; i < SIZE; i++) {
             for (int j = 1; j < SIZE; j++) {
                 if (map[i][j] == '.') {
-                    continue;
+                    assert true;
                 } else if (!Character.isDigit(map[i][j])) {
                     findInt(i, j);
                 }
@@ -34,7 +34,7 @@ public class Day3 {
             for (int j = y - 1; j < y + 2; j++) {
                 if (map[i][j] == '.') {
                     lookedAt[i][j] = true;
-                    continue;
+                    assert true;
                 } else if (!lookedAt[i][j] && Character.isDigit(map[i][j])) {
                     product *= fillIn(i, j);
                     no++;
