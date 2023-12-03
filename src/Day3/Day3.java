@@ -28,20 +28,27 @@ public class Day3 {
 
     public static void findInt(int x, int y) {
         // look in a square around the point
+        byte no = 0;
+        long product = 1;
         for (int i = x - 1; i < x + 2; i++) {
             for (int j = y - 1; j < y + 2; j++) {
-                 if (map[i][j] == '.') {
+                if (map[i][j] == '.') {
                     lookedAt[i][j] = true;
                     continue;
                 } else if (!lookedAt[i][j] && Character.isDigit(map[i][j])) {
-                    fillIn(i, j);
+                    product *= fillIn(i, j);
+                    no++;
                 }
             }
         }
+        if (no == 2) {
+            answer += product;
+        }
     }
 
-    public static void fillIn(int x, int y) {
+    public static int fillIn(int x, int y) {
         // We found a number, so we need to fill it in and add it to the answer
+
         int starting = y;
         int ending = y;
         for (int i = 1; i <= 3; i++) {
@@ -64,6 +71,6 @@ public class Day3 {
             lookedAt[x][i] = true;
         }
         System.out.println(Integer.parseInt(String.valueOf(ans)));
-        answer += Integer.parseInt(String.valueOf(ans));
+        return Integer.parseInt(String.valueOf(ans));
     }
 }
