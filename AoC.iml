@@ -8,6 +8,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/Day1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/Day2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Day3" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/conda" />
     </content>
     <orderEntry type="inheritedJdk" />
