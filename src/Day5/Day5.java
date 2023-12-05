@@ -7,8 +7,17 @@ import java.util.Arrays;
 public class Day5 {
     public static void main(String[] args) throws IOException {
         BufferedReader r = new BufferedReader(new FileReader("input.txt"));
-        ArrayList<Long> seeds;
-        seeds = getList(r.readLine().substring(6));
+        int[] seeds = new int[1966850695];
+        ArrayList<Integer> seeds1 = getList(r.readLine().substring(6)).stream().map(Long::intValue)
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        int temp1 = 0;
+        for (int i = 0; i < seeds1.size(); i += 2) {
+            for (int j = seeds1.get(i); j <= seeds1.get(i + 1) + seeds1.get(i); j++) {
+                seeds[temp1] = j;
+                temp1++;
+            }
+        }
+        System.out.println(seeds[1066850694]);
         long ans = Long.MAX_VALUE;
         ArrayList<ArrayList<Map>> maps = new ArrayList<>(7);
         for (int i = 0; i < 7; i++) {
@@ -29,7 +38,8 @@ public class Day5 {
             maps.get(i).add(new Map(r1, r2));
         }
 
-        for (long seed : seeds) {
+        for (int j : seeds) {
+            long seed = j & 0xffffffffL;
             for (ArrayList<Map> map : maps) {
                 long a = -1;
                 for (Map m : map) {
@@ -42,7 +52,7 @@ public class Day5 {
                     seed = a;
                 }
             }
-            if (seed < ans){
+            if (seed < ans) {
                 ans = seed;
             }
         }
