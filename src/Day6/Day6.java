@@ -1,11 +1,12 @@
 import java.util.Arrays;
 
 // https://www.desmos.com/calculator/mqfc634wuf
+// Light work, solve the quadratic equation and then round up and down to get the bounds
 public class Day6 {
     public static void main(String[] args) {
         // Hardcode cause small data set and I'm lazy
-        int[] time = {57, 72, 69, 92};
-        int[] distance = {291, 1172, 1176, 2026};
+        long[] time = {57726992};
+        long[] distance = {291117211762026L};
         long answer = 1;
         for (int i = 0; i < time.length; i++) {
             double[] ans = quadraticFormula(1, -time[i], distance[i]);
@@ -18,7 +19,7 @@ public class Day6 {
         System.out.println(answer);
     }
 
-    public static double[] quadraticFormula(int a, int b, int c) {
+    public static double[] quadraticFormula(long a, long b, long c) {
         double sqrt = Math.sqrt(Math.pow(b, 2) - 4 * a * c);
         return new double[]{
                 ((-b + sqrt) / (2 * a)),
