@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class Hand implements Comparable<Hand> {
     String cards;
@@ -43,6 +44,8 @@ public class Hand implements Comparable<Hand> {
             otherCards.put(o.cards.charAt(i),
                     otherCards.containsKey(o.cards.charAt(i)) ? otherCards.get(o.cards.charAt(i)) + 1 : 1);
         }
+        joker(thisCards);
+        joker(otherCards);
 
         int thisScore = Score(thisCards);
         int otherScore = Score(otherCards);
@@ -50,6 +53,7 @@ public class Hand implements Comparable<Hand> {
         if (thisScore != otherScore) {
             return Integer.compare(thisScore, otherScore);
         }
+
         String cardtemp = cards;
         String othercardtemp = o.cards;
         cardtemp = cardtemp.replace('A', 'Z');
@@ -58,17 +62,32 @@ public class Hand implements Comparable<Hand> {
         othercardtemp = othercardtemp.replace('K', 'Y');
         cardtemp = cardtemp.replace('Q', 'X');
         othercardtemp = othercardtemp.replace('Q', 'X');
-        cardtemp = cardtemp.replace('J', 'W');
-        othercardtemp = othercardtemp.replace('J', 'W');
+        cardtemp = cardtemp.replace('J', (char) 5);
+        othercardtemp = othercardtemp.replace('J', (char) 5);
         cardtemp = cardtemp.replace('T', 'V');
         othercardtemp = othercardtemp.replace('T', 'V');
 
-        for (int i = 0; i < cardtemp.length(); i++) {
+        for (
+                int i = 0; i < cardtemp.length(); i++) {
             if (cardtemp.charAt(i) != othercardtemp.charAt(i)) {
                 return Character.compare(cardtemp.charAt(i), othercardtemp.charAt(i));
             }
         }
         return 0;
+    }
+
+    private void joker(HashMap<Character, Integer> cards) {
+        if (cards.containsKey('J')) {
+            int a = cards.remove('J');
+            //Iterate through the map and find the max value and add "a" to it
+            Map.Entry<Character, Integer>  max = Map.entry('J', 0);
+            for (Map.Entry<Character, Integer> i : cards.entrySet()) {
+                if (i.getValue() > max.getValue()) {
+                    max = i;
+                }
+            }
+            cards.put(max.getKey(), max.getValue() + a);
+        }
     }
 
     private int Score(HashMap<Character, Integer> otherCards) {
