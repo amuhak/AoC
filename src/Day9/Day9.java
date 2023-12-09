@@ -2,21 +2,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 public class Day9 {
     public static void main(String[] args) throws Exception {
         BufferedReader r = new BufferedReader(new FileReader("input.txt"));
-        r.mark(1000000);
-        String s = r.readLine();
-        int l = getIntArr(s).length;
+        String s;
         ArrayList<int[]> list = new ArrayList<>();
-        r.reset();
         while ((s = r.readLine()) != null) {
             list.add(getIntArr(s));
         }
         long ans = 0;
-        for (int[] arr : list){
-            ans+=predictNext(arr);
+        for (int[] arr : list) {
+            ans += predictNext(arr);
         }
         System.out.println(ans);
     }
@@ -25,20 +23,17 @@ public class Day9 {
         return Arrays.stream(s.split(" ")).mapToInt(Integer::parseInt).toArray();
     }
 
-    /*
-    Create a function that takes an array and creates the sequence:
-    1   3   6  10  15  21
-      2   3   4   5   6
-        1   1   1   1
-          0   0   0
-     */
     public static long predictNext(int[] arr) {
-        long sum = 0;
+        Stack<Integer> stack = new Stack<>();
+        long diff = 0;
         while (!allAre0(arr)) {
-            sum += arr[arr.length - 1];
+            stack.push(arr[0]);
             arr = diff(arr);
         }
-        return sum;
+        while (!stack.isEmpty()) {
+            diff = stack.pop() - diff;
+        }
+        return diff;
     }
 
     public static int[] diff(int[] arr) {
