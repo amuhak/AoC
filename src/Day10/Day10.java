@@ -1,3 +1,4 @@
+// Totally efficient, I swear. I didn't spend 2 hours trying to figure out why my code wasn't working.
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -74,16 +75,10 @@ public class Day10 {
             y++;
         }
         path[START.y][START.x] = 1;
-        System.out.println(Arrays.deepToString(points));
-        System.out.println(Arrays.deepToString(path));
-        System.out.println(START);
         Point p = (Point) START.clone();
         do {
             p = findNext(p);
         } while (p != null);
-        for (int[] arr : path) {
-            System.out.println(Arrays.toString(arr));
-        }
         for (int i = 0; i < path.length; i++) {
             for (int j = 0; j < path[i].length; j++) {
                 if (path[i][j] == (count - 1) / 2) {
@@ -94,6 +89,24 @@ public class Day10 {
         System.out.println((count - 1) / 2);
         System.out.println(p);
         System.out.println(points[p.y][p.x]);
+        fillAreaNotInside(new Point(0, 0));
+        int c = 0;
+        for (int i = 0; i < path.length; i++) {
+            for (int j = 0; j < path[i].length; j++) {
+                if (path[i][j] == 0) {
+                    if (!doubleCheck(new Point(j, i))) {
+                        c++;
+                    } else {
+                        System.out.println(j + " " + i);
+                        //path[i][j] = -1;
+                    }
+                }
+            }
+        }
+        for (int[] arr : path) {
+            System.out.println(Arrays.toString(arr));
+        }
+        System.out.println(c);
     }
 
     public static Point findNext(Point p) {
@@ -113,5 +126,38 @@ public class Day10 {
             }
         }
         return null;
+    }
+
+    public static void fillAreaNotInside(Point p) {
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                if (p.y + y - 1 < 0 || p.x + x - 1 < 0 || p.y + y - 1 >= path.length || p.x + x - 1 >= path[0].length) {
+                    continue;
+                }
+                if (path[p.y + y - 1][p.x + x - 1] == 0) {
+                    path[p.y + y - 1][p.x + x - 1] = -1;
+                    fillAreaNotInside(new Point(p.x + x - 1, p.y + y - 1));
+                }
+            }
+        }
+    }
+
+    public static boolean doubleCheck(Point p) {
+        int left = 0;
+        // going left from p
+        for (int x = p.x; x >= 0; x--) {
+            if (path[p.y][x] == -1) {
+                break;
+            }
+            // This took way too long to figure out.
+            // Basically, if we have odd number of points to the left of p that are coming from the north, then it is
+            // guaranteed that p is in the inside of the area.
+            // Why?
+            // Well, you're going to have to draw it out a bunch of times to see why.
+            if ((points[p.y][x] == '|' || points[p.y][x] == 'L' || points[p.y][x] == 'J') && path[p.y][x] != 0) {
+                left++;
+            }
+        }
+        return (left % 2 == 0);
     }
 }
