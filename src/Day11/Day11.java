@@ -7,10 +7,11 @@ import java.util.List;
 
 public class Day11 {
     public static void main(String[] args) throws Exception {
+        final int SIZE = 1000000 - 1;
         BufferedReader r = new BufferedReader(new FileReader("input.txt"));
         LinkedList<LinkedList<Character>> data = new LinkedList<>();
         ArrayList<Point> points = new ArrayList<>();
-        long ans = 0;
+        long ans;
         String s;
         while ((s = r.readLine()) != null) {
             LinkedList<Character> row = new LinkedList<>();
@@ -24,11 +25,10 @@ public class Day11 {
         ArrayList<Integer> colNos = new ArrayList<>();
         for (LinkedList<Character> l : data) {
             if (isAllDot(l)) {
-                rowNos.add(temp + (int) ans++);
+                rowNos.add(temp);
             }
             temp++;
         }
-        ans = 0;
         // Iterate down the columns
         for (int i = 0; i < data.getFirst().size(); i++) {
             boolean allDot = true;
@@ -39,27 +39,32 @@ public class Day11 {
                 }
             }
             if (allDot) {
-                colNos.add(i + (int) ans++);
+                colNos.add(i);
             }
         }
-        // Add dot rows
-        for (int i : rowNos) {
-            LinkedList<Character> row = new LinkedList<>();
-            for (int j = 0; j < data.getFirst().size(); j++) {
-                row.add('.');
-            }
-            data.add(i, row);
-        }
-        // Add dot columns
-        for (int i : colNos) {
-            for (LinkedList<Character> datum : data) {
-                datum.add(i, '.');
-            }
-        }
+        colNos.sort(Integer::compareTo);
+        rowNos.sort(Integer::compareTo);
+
         for (int i = 0; i < data.size(); i++) {
             for (int j = 0; j < data.getFirst().size(); j++) {
                 if (data.get(i).get(j) == '#') {
-                    points.add(new Point(i, j));
+                    int rowCounter = 0;
+                    int colCounter = 0;
+                    for (int c : colNos) {
+                        if (c <= j) {
+                            colCounter += SIZE;
+                        } else {
+                            break;
+                        }
+                    }
+                    for (int row : rowNos) {
+                        if (row <= i) {
+                            rowCounter += SIZE;
+                        } else {
+                            break;
+                        }
+                    }
+                    points.add(new Point(i + rowCounter, j + colCounter));
                 }
             }
         }
