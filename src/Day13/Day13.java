@@ -40,6 +40,7 @@ public class Day13 {
     }
 
     public static boolean isValidHorizontalReflection(int x) {
+        int noOfErrors = 0;
         for (int left = x; left >= 0; left--) {
             int right = x + x + 1 - left;
             if (right >= grid.getFirst().size()) {
@@ -47,23 +48,32 @@ public class Day13 {
             }
             for (ArrayList<Boolean> row : grid) {
                 if (row.get(left) != row.get(right)) {
+                    noOfErrors++;
+                }
+                if (noOfErrors > 1) {
                     return false;
                 }
             }
         }
-        return true;
+        return noOfErrors == 1;
     }
 
     public static boolean isValidVerticalReflection(int y) {
+        int noOfErrors = 0;
         for (int top = y; top >= 0; top--) {
             int bottom = y + y + 1 - top;
             if (bottom >= grid.size()) {
                 break;
             }
-            if (!grid.get(top).equals(grid.get(bottom))) {
-                return false;
+            for (int i = 0; i < grid.get(top).size(); i++) {
+                if (grid.get(top).get(i) != grid.get(bottom).get(i)) {
+                    noOfErrors++;
+                    if (noOfErrors > 1) {
+                        return false;
+                    }
+                }
             }
         }
-        return true;
+        return noOfErrors == 1;
     }
 }
