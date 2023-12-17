@@ -2,7 +2,6 @@
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.HashSet;
 
 public class Day16 {
@@ -11,6 +10,7 @@ public class Day16 {
     public static HashSet<String> set = new HashSet<>();
 
     public static void main(String[] args) throws Exception {
+        long max = 0;
         BufferedReader r = new BufferedReader(new FileReader("input.txt"));
         r.mark(100000);
         int n = 0, m = 0;
@@ -29,13 +29,44 @@ public class Day16 {
             }
             n++;
         }
-        System.out.println(Arrays.deepToString(grid));
-        pathfinding1(1, 0, 'r');
-        visited[1][0] = false;
-        for (boolean[] booleans : visited) {
-            System.out.println(Arrays.toString(booleans));
+
+        for (int i = 1; i < grid.length - 1; i++) {
+            pathfinding1(i, 0, 'r');
+            visited[i][0] = false;
+            var temp = countTrue();
+            if (temp > max) {
+                max = temp;
+            }
+            reset();
         }
-        System.out.println(countTrue());
+        for (int i = 1; i < grid.length - 1; i++) {
+            pathfinding1(i, grid[0].length - 1, 'l');
+            visited[i][grid[0].length - 1] = false;
+            var temp = countTrue();
+            if (temp > max) {
+                max = temp;
+            }
+            reset();
+        }
+        for (int i = 1; i < grid[0].length - 1; i++) {
+            pathfinding1(0, i, 'd');
+            visited[0][i] = false;
+            var temp = countTrue();
+            if (temp > max) {
+                max = temp;
+            }
+            reset();
+        }
+        for (int i = 1; i < grid[0].length - 1; i++) {
+            pathfinding1(grid.length - 1, i, 'u');
+            visited[grid.length - 1][i] = false;
+            var temp = countTrue();
+            if (temp > max) {
+                max = temp;
+            }
+            reset();
+        }
+        System.out.println(max);
     }
 
     public static void pathfinding1(int x, int y, char direction) {
@@ -157,6 +188,11 @@ public class Day16 {
             }
         }
         return count;
+    }
+
+    public static void reset() {
+        visited = new boolean[visited.length][visited[0].length];
+        set.clear();
     }
 }
 
