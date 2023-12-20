@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Day19 {
     public static HashMap<String, Workflow> workflows = new HashMap<>();
+    public static ArrayList<Part> answers = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         AtomicLong ans = new AtomicLong();
@@ -16,15 +17,11 @@ public class Day19 {
             String[] part = line.split("\\{");
             workflows.put(part[0].trim(), new Workflow(part[1].trim().substring(0, part[1].length() - 1)));
         }
-        while ((line = r.readLine()) != null) {
-            Part part = new Part(line);
-            parts.add(part);
-        }
         //long time = System.currentTimeMillis();
         // parts.parallelStream().forEach(... is slower 😭😭😭
         parts.forEach(part -> {
             if (workflows.get("in").run(part)) {
-                ans.addAndGet(part.getSum());
+                ans.addAndGet(part.getNoOfCombos());
             }
         });
         //System.out.println(System.currentTimeMillis() - time);
@@ -33,28 +30,17 @@ public class Day19 {
     }
 
     public static class Part {
-        public long x, m, a, s;
+        public Range x, m, a, s;
 
-        private Part(String string) {
-            String[] parts = string.substring(1, string.length() - 1).split(",");
-            x = Long.parseLong(parts[0].substring(2));
-            m = Long.parseLong(parts[1].substring(2));
-            a = Long.parseLong(parts[2].substring(2));
-            s = Long.parseLong(parts[3].substring(2));
+        public Part(Range x, Range m, Range a, Range s) {
+            this.x = x;
+            this.m = m;
+            this.a = a;
+            this.s = s;
         }
 
-        @Override
-        public String toString() {
-            return "Part{" +
-                    "x=" + x +
-                    ", m=" + m +
-                    ", a=" + a +
-                    ", s=" + s +
-                    '}';
-        }
-
-        public long getSum() {
-            return x + m + a + s;
+        public long getNoOfCombos() {
+            return (long) x.length() * m.length() * a.length() * s.length();
         }
     }
 
@@ -134,13 +120,105 @@ public class Day19 {
 
         public boolean run(Part part) {
             return switch (compare) {
-                case 'x' -> greater ? part.x > value : part.x < value;
-                case 'm' -> greater ? part.m > value : part.m < value;
-                case 'a' -> greater ? part.a > value : part.a < value;
-                case 's' -> greater ? part.s > value : part.s < value;
+                case 'x' -> {
+                    if (!greater) {
+                        yield part.x.setMax(value);
+                    } else {
+                        yield part.x.setMin(value);
+                    }
+                }
+
+                case 'm' -> {
+                    if (!greater) {
+                        yield part.m.setMax(value);
+                    } else {
+                        yield part.m.setMin(value);
+                    }
+                }
+                case 'a' -> {
+                    if (!greater) {
+                        yield part.a.setMax(value);
+                    } else {
+                        yield part.a.setMin(value);
+                    }
+                }
+                case 's' -> {
+                    if (!greater) {
+                        yield part.s.setMax(value);
+                    } else {
+                        yield part.s.setMin(value);
+                    }
+                }
                 default -> false;
             };
         }
 
     }
+
+    public static class Range {
+        public long start;
+        public long end;
+
+        public Range(long start, long end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public boolean setMax(long max) {
+            if (max > start) {
+                if (max < end) {
+                    end = max;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public boolean setMin(long min) {
+            if (min < end) {
+                if (min > start) {
+                    start = min;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public boolean contains(long num) {
+            return start <= num && num < end;
+        }
+
+        public int length() {
+            return (int) (end - start);
+        }
+
+        public void setZero() {
+            start = 0;
+            end = 0;
+        }
+
+        public Range copy() {
+            return new Range(start, end);
+        }
+
+        public Range difference(Range range) {
+            if (range.start >= end || range.end <= start) {
+                return this;
+            }
+            if (range.start <= start && range.end >= end) {
+                return new Range(0, 0);
+            }
+            if (range.start <= start) {
+                return new Range(range.end, end);
+            }
+            return new Range(start, range.start);
+        }
+
+        public boolean equals(Range range) {
+            return range.start == start && range.end == end;
+        }
+    }
 }
+
+
+
