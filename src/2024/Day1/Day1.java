@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Day1 {
@@ -8,16 +9,16 @@ public class Day1 {
         Scanner sc = new Scanner(new File("input.txt"));
         long ans = 0;
         ArrayList<Integer> list = new ArrayList<>();
-        ArrayList<Integer> list1 = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
 
         while (sc.hasNext()) {
             list.add(sc.nextInt());
-            list1.add(sc.nextInt());
+            int x = sc.nextInt();
+            map.put(x, map.getOrDefault(x, 0) + 1);
         }
         list.sort(Integer::compareTo);
-        list1.sort(Integer::compareTo);
         for (int i = 0; i < list.size(); i++) {
-            ans += Math.abs(list.get(i) - list1.get(i));
+            ans += Math.abs(list.get(i) * map.getOrDefault(list.get(i), 0));
         }
         System.out.println(ans);
     }
