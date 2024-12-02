@@ -25,24 +25,34 @@ public class Day2 {
         System.out.println(ans);
     }
 
-    private static boolean valid(ArrayList<Integer> i) {
+    private static boolean valid(ArrayList<Integer> x) {
         boolean ans = true;
-        for (int j = 0; j < i.size() - 1; j++) {
-            int diff = i.get(j) - i.get(j + 1);
-            if (diff > 3 || diff < 1) {
-                ans = false;
-                break;
+        for (int k = -1; k < x.size(); k++) {
+            ArrayList<Integer> i = new ArrayList<>(x);
+            if (k != -1) {
+                i.remove(k);
             }
-        }
-        if (ans) {
-            return true;
-        }
-        ans = true;
-        for (int j = 0; j < i.size() - 1; j++) {
-            int diff = i.get(j) - i.get(j + 1);
-            if (diff > -1 || diff < -3) {
-                ans = false;
-                break;
+            ans = true;
+            for (int j = 0; j < i.size() - 1; j++) {
+                int diff = i.get(j) - i.get(j + 1);
+                if (diff > 3 || diff < 1) {
+                    ans = false;
+                    break;
+                }
+            }
+            if (ans) {
+                return true;
+            }
+            ans = true;
+            for (int j = 0; j < i.size() - 1; j++) {
+                int diff = i.get(j) - i.get(j + 1);
+                if (diff > -1 || diff < -3) {
+                    ans = false;
+                    break;
+                }
+            }
+            if (ans) {
+                return true;
             }
         }
         return ans;
