@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Day4 {
@@ -16,44 +17,35 @@ public class Day4 {
                     case 'M' -> 1;
                     case 'A' -> 2;
                     case 'S' -> 3;
-                    default -> throw new IllegalStateException("Unexpected value: " + i);
+                    default -> 0;
                 });
             }
             arr.add(array);
         }
+        System.out.println(arr);
         long ans = 0;
         for (int i = 0; i < arr.size(); i++) {
             for (int j = 0; j < arr.getFirst().size(); j++) {
-                if (arr.get(i).get(j) == 0) {
-                    for (Direction direction : Direction.values()) {
-                        ans += dfs(i, j, arr, direction, 0);
-                    }
+                if (arr.get(i).get(j) == 2) {
+                    ans += dfs(i, j, arr);
                 }
             }
         }
         System.out.println(ans);
     }
 
-    public static long dfs(int i, int j, ArrayList<ArrayList<Integer>> arr, Direction direction, int toFind) {
-        if (i < 0 || i >= arr.size() || j < 0 || j >= arr.getFirst().size() || arr.get(i).get(j) != toFind) {
+    public static long dfs(int i, int j, ArrayList<ArrayList<Integer>> arr) {
+        if (i < 1 || i >= arr.size() - 1 || j < 1 || j >= arr.getFirst().size() - 1) {
             return 0;
         }
-        if (toFind == 3) {
-            return 1;
+        int[][] d = {{-1, 1}, {1, -1}, {-1, -1}, {1, 1}};
+        for (var k : d) {
+            if (arr.get(i + k[0]).get(j + k[1]) == 0 || arr.get(i + k[0]).get(j + k[1]) == 2) {
+                return 0;
+            }
         }
-        return switch (direction) {
-            case DOWN -> dfs(i + 1, j, arr, direction, toFind + 1);
-            case UP -> dfs(i - 1, j, arr, direction, toFind + 1);
-            case LEFT -> dfs(i, j - 1, arr, direction, toFind + 1);
-            case RIGHT -> dfs(i, j + 1, arr, direction, toFind + 1);
-            case DOWN_LEFT -> dfs(i + 1, j - 1, arr, direction, toFind + 1);
-            case DOWN_RIGHT -> dfs(i + 1, j + 1, arr, direction, toFind + 1);
-            case UP_LEFT -> dfs(i - 1, j - 1, arr, direction, toFind + 1);
-            case UP_RIGHT -> dfs(i - 1, j + 1, arr, direction, toFind + 1);
-        };
-    }
 
-    public enum Direction {
-        DOWN, UP, LEFT, RIGHT, DOWN_LEFT, DOWN_RIGHT, UP_LEFT, UP_RIGHT
+        return !Objects.equals(arr.get(i - 1).get(j - 1), arr.get(i + 1).get(j + 1)) &&
+                !Objects.equals(arr.get(i - 1).get(j + 1), arr.get(i + 1).get(j - 1)) ? 1 : 0;
     }
 }
