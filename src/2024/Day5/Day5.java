@@ -2,14 +2,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class Day5 {
     public static void main(String[] args) throws FileNotFoundException {
+        // page ordering rules
         Scanner sc = new Scanner(new File("Input.txt"));
-        ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+        ArrayList<HashSet<Integer>> arr = new ArrayList<>();
         for (int i = 0; i < 101; i++) {
-            arr.add(new ArrayList<>());
+            arr.add(new HashSet<>());
         }
 
         while (sc.hasNextLine()) {
@@ -18,8 +20,10 @@ public class Day5 {
             arr.get(l).add(r);
         }
 
+        // pages to produce in each update
         sc = new Scanner(new File("Input1.txt"));
-        int ans = sc.tokens().parallel()
+        int ans = sc.tokens()
+                .parallel()
                 .map(i -> i.split(","))
                 .map(i -> Arrays.stream(i).map(Integer::parseInt).toList())
                 .mapToInt(a -> {
