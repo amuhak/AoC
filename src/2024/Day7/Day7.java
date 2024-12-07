@@ -24,13 +24,18 @@ public class Day7 {
             var arr = p.getRight();
             int len = arr.size() - 1;
             // if 0 add, if 1 multiply
-            for (int i = 0; i < 1 << len; i++) {
+            for (int i = 0; i < Math.pow(3, len); i++) {
                 long sum = arr.getFirst();
+                int temp = i;
                 for (int j = 0; j < len; j++) {
-                    if ((i & 1 << j) != 0) {
+                    int op = temp % 3;
+                    temp /= 3;
+                    if (op == 0) {
                         sum += arr.get(j + 1);
-                    } else {
+                    } else if (op == 1) {
                         sum *= arr.get(j + 1);
+                    } else {
+                        sum = Long.parseLong(sum + "" + arr.get(j + 1));
                     }
                 }
                 if (sum == no) {
