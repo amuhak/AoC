@@ -12,14 +12,8 @@ public class Day10 {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
                 dp = new int[map.length][map[0].length];
-                dfs(i, j, 0);
-                for (var row : dp) {
-                    for (var cell : row) {
-                        if (cell == 1) {
-                            ans++;
-                        }
-                    }
-                }
+                ans += dfs(i, j, 0);
+
             }
         }
         System.out.println(ans);
@@ -28,6 +22,9 @@ public class Day10 {
     static int dfs(int x, int y, int toFind) {
         if (x < 0 || x >= map.length || y < 0 || y >= map[0].length || dp[x][y] == -1 || map[x][y] != toFind) {
             return 0;
+        }
+        if (dp[x][y] != 0) {
+            return dp[x][y];
         }
         if (toFind == 9) {
             dp[x][y] = 1;
@@ -38,6 +35,12 @@ public class Day10 {
                 + dfs(x - 1, y, toFind + 1)
                 + dfs(x, y + 1, toFind + 1)
                 + dfs(x,y - 1, toFind + 1);
+
+        if (ans == 0) {
+            dp[x][y] = -1;
+        } else {
+            dp[x][y] = ans;
+        }
 
         return ans;
     }
