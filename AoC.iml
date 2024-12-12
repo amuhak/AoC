@@ -16,6 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/2024/Day8" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/2024/Day9" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/2024/Day10" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/2024/Day11" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/conda" />
     </content>
     <orderEntry type="inheritedJdk" />
