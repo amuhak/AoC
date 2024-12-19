@@ -18,10 +18,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/2024/Day10" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/2024/Day11" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/2024/Day12" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/2024/Day13" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/2024/Day18" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/conda" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Python 3.11 (AoC) interpreter library" level="application" />
+    <orderEntry type="library" name="javasolver.jsr331.glpk" level="project" />
   </component>
 </module>
