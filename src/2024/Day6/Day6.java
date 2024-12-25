@@ -1,7 +1,8 @@
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Day6 {
     public static void main(String[] args) throws FileNotFoundException {
@@ -28,9 +29,16 @@ public class Day6 {
                 break;
             }
         }
-
+        int x1 = x;
+        int y1 = y;
+        Direction d1 = Direction.UP;
+        int[][] copy = new int[map.length][map[0].length];
+        for (int i = 0; i < map.length; i++) {
+            System.arraycopy(map[i], 0, copy[i], 0, map[0].length);
+        }
+        Set<pos> positions = new HashSet<>();
         Direction d = Direction.UP;
-        try{
+        try {
             while (true) {
                 int[] next = move(x, y, d);
                 if (map[next[1]][next[0]] == 1) {
@@ -39,21 +47,49 @@ public class Day6 {
                     x = next[0];
                     y = next[1];
                 }
+
+                positions.add(new pos(x, y));
                 map[y][x] = 2;
             }
         } catch (Exception e) {
             // Do nothing
         }
-        int count = 0;
-        for (int[] ints : map) {
-            for (int anInt : ints) {
-                if (anInt == 2) {
+        int ans = 0;
+        positions.remove(new pos(x1, y1));
+        for (final pos p : positions) {
+            x = x1;
+            y = y1;
+            d = d1;
+            for (int i = 0; i < map.length; i++) {
+                System.arraycopy(copy[i], 0, map[i], 0, map[0].length);
+            }
+            map[p.y()][p.x()] = 1;
+            int count = 0;
+            try {
+                while (true) {
                     count++;
+                    // This will be an infinite loop (100%)
+                    if (count > map.length * map[0].length) {
+                        ans++;
+                        break;
+                    }
+                    int[] next = move(x, y, d);
+                    if (map[next[1]][next[0]] == 1) {
+                        d = turnRight(d);
+                    } else {
+                        x = next[0];
+                        y = next[1];
+                    }
+                    map[y][x] = 2;
                 }
+            } catch (Exception e) {
+                // Do nothing
             }
         }
-        System.out.println(Arrays.deepToString(map));
-        System.out.println(count);
+        System.out.println(ans);
+    }
+
+    record pos(int x, int y) {
     }
 
     enum Direction {
@@ -68,6 +104,7 @@ public class Day6 {
             case RIGHT -> Direction.DOWN;
         };
     }
+
     static int[] move(int x, int y, Direction d) {
         return switch (d) {
             case UP -> new int[]{x, y - 1};
