@@ -15,23 +15,29 @@ public class Day4 {
                     return row;
                 })
                 .toArray(boolean[][]::new);
+        boolean edited = true;
         int ans = 0;
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (arr[i][j]) {
-                    int numberOfNeighbors = 0;
-                    for (int k = -1; k <= 1; k++) {
-                        for (int l = -1; l <= 1; l++) {
-                            try {
-                                if (arr[i + k][j + l] && (k != 0 || l != 0)) {
-                                    numberOfNeighbors++;
+        while (edited) {
+            edited = false;
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = 0; j < arr[0].length; j++) {
+                    if (arr[i][j]) {
+                        int numberOfNeighbors = 0;
+                        for (int k = -1; k <= 1; k++) {
+                            for (int l = -1; l <= 1; l++) {
+                                try {
+                                    if (arr[i + k][j + l] && (k != 0 || l != 0)) {
+                                        numberOfNeighbors++;
+                                    }
+                                } catch (ArrayIndexOutOfBoundsException e) {
                                 }
-                            } catch (ArrayIndexOutOfBoundsException e) {
                             }
                         }
-                    }
-                    if (numberOfNeighbors < 4) {
-                        ans++;
+                        if (numberOfNeighbors < 4) {
+                            ans++;
+                            arr[i][j] = false;
+                            edited = true;
+                        }
                     }
                 }
             }
