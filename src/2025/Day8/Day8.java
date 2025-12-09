@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -20,31 +19,32 @@ public class Day8 {
                 distances.add(input[i].distanceTo(input[j], i, j));
             }
         }
-        int number = 1000;
+        long ans;
         DSU set = new DSU(input.length);
-        for (int i = 0; i < number; i++) {
+        while (true) {
             Distance d = distances.poll();
             assert d != null;
             if (set.find(d.to) != set.find(d.from)) {
                 set.link(d.to, d.from);
             }
+            if (isDone(set)) {
+                ans = input[d.to].x * input[d.from].x;
+                break;
+            }
         }
-        int[] lengths = new int[input.length];
-        for (int i = 0; i < input.length; i++) {
-            lengths[set.find(i)]++;
-        }
-        System.out.println(Arrays.toString(lengths));
-        long product = Arrays.stream(lengths)
-                .map(i -> -i)
-                .sorted()
-                .map(i -> -i)
-                .limit(3)
-                .mapToLong(i -> i)
-                .reduce(1, (a, b) -> a * b);
-
-        System.out.println("Product: " + product);
+        System.out.println("Ans: " + ans);
         var end = System.nanoTime();
         System.out.println("Time: " + (end - start) / 1_000_000 + " ms");
+    }
+
+    static boolean isDone(DSU set) {
+        int root = set.find(0);
+        for (int i = 1; i < set.parent.length; i++) {
+            if (set.find(i) != root) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static class DSU {
