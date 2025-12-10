@@ -4,11 +4,12 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.LongStream;
-import java.util.stream.Stream;
 
 public class Day9 {
     static Point[] input;
     static ArrayList<Line> lines;
+    static ArrayList<Line> verticalLines = new ArrayList<>();
+    static ArrayList<Line> horizontalLines = new ArrayList<>();
 
     static void main() throws FileNotFoundException {
         var start = System.nanoTime();
@@ -22,10 +23,21 @@ public class Day9 {
             lines.add(new Line(input[i - 1], input[i % input.length]));
         }
 
-        lines.sort(Comparator.comparingLong((l) -> l.p1.x));
+        for (Line l : lines) {
+            // Separate vertical and horizontal lines
+            if (l.p1.x == l.p2.x) {
+                verticalLines.add(l);
+            } else {
+                horizontalLines.add(l);
+            }
+        }
+
+        // Sort lines for binary search
+        verticalLines.sort(Comparator.comparingLong(l -> l.p1.x));
+        horizontalLines.sort(Comparator.comparingLong(l -> l.p1.y));
 
         long ans = LongStream.range(0, input.length)
-                .parallel()
+                //.parallel() // This slows it down now
                 .flatMap(i -> LongStream.range(i + 1, input.length)
                         .map(j -> input[Math.toIntExact(i)].area(input[Math.toIntExact(j)])))
                 .max()
@@ -37,28 +49,38 @@ public class Day9 {
         System.out.println("Time: " + (end - start) / 1_000_000 + " ms");
     }
 
+    static int findStartIndexX(ArrayList<Line> list, long xThreshold) {
+        int low = 0, high = list.size();
+        while (low < high) {
+            int mid = (low + high) / 2;
+            if (list.get(mid).p1.x <= xThreshold) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+
+    static int findStartIndexY(ArrayList<Line> list, long yThreshold) {
+        int low = 0, high = list.size();
+        while (low < high) {
+            int mid = (low + high) / 2;
+            if (list.get(mid).p1.y <= yThreshold) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+
     static class Line {
         Point p1, p2;
 
         Line(Point p1, Point p2) {
             this.p1 = p1;
             this.p2 = p2;
-        }
-
-        Stream<Point> points() {
-            if (p1.x == p2.x) {
-                // vertical line
-                long lowerY = Math.min(p1.y, p2.y);
-                long higherY = Math.max(p1.y, p2.y);
-                return LongStream.rangeClosed(lowerY, higherY)
-                        .mapToObj(y -> new Point(p1.x, y));
-            } else {
-                // horizontal line
-                long lowerX = Math.min(p1.x, p2.x);
-                long higherX = Math.max(p1.x, p2.x);
-                return LongStream.rangeClosed(lowerX, higherX)
-                        .mapToObj(x -> new Point(x, p1.y));
-            }
         }
     }
 
@@ -80,48 +102,50 @@ public class Day9 {
         }
 
         long area(Point other) {
-            // there are 4 lines
-            Line a = new Line(this, new Point(this.x, other.y));
-            Line b = new Line(new Point(this.x, other.y), other);
-            Line c = new Line(other, new Point(other.x, this.y));
-            Line d = new Line(new Point(other.x, this.y), this);
-            boolean allInside = Stream.of(a, b, c, d)
-                    .flatMap(Line::points)
-                    .allMatch(Point::inside);
-            if (allInside) {
-                return (Math.abs(other.x - this.x) + 1) * (Math.abs(other.y - this.y) + 1);
-            }
-            return 0;
-        }
+            long minX = Math.min(this.x, other.x);
+            long maxX = Math.max(this.x, other.x);
+            long minY = Math.min(this.y, other.y);
+            long maxY = Math.max(this.y, other.y);
 
-        boolean inside() {
-            // Loop through all lines and check and count number of borders to the left
-            int count = 0;
-            for (Line line : lines) {
-                Point p1 = line.p1;
-                Point p2 = line.p2;
+            int startIndex = findStartIndexX(verticalLines, minX);
 
-                if (p1.y == p2.y && p1.y == this.y) {
-                    long minX = Math.min(p1.x, p2.x);
-                    long maxX = Math.max(p1.x, p2.x);
-                    if (this.x >= minX && this.x <= maxX) {
-                        return true;
-                    }
+            for (int i = startIndex; i < verticalLines.size(); i++) {
+                Line l = verticalLines.get(i);
+
+                // Too far
+                if (l.p1.x >= maxX) {
+                    break;
                 }
 
-                if (p1.x == p2.x && p1.x <= this.x) {
-                    // Line of interest
-                    long lowerY = Math.min(p1.y, p2.y);
-                    long highY = Math.max(p1.y, p2.y);
-                    if (lowerY <= this.y && this.y < highY) {
-                        count++;
-                        if (p1.x == this.x) {
-                            return true;
-                        }
-                    }
+                long wallMin = Math.min(l.p1.y, l.p2.y);
+                long wallMax = Math.max(l.p1.y, l.p2.y);
+
+                // Overlap?
+                if (wallMin < maxY && wallMax > minY) {
+                    return 0;
                 }
             }
-            return count % 2 == 1;
+
+            startIndex = findStartIndexY(horizontalLines, minY);
+            for (int i = startIndex; i < horizontalLines.size(); i++) {
+                Line l = horizontalLines.get(i);
+
+                // Too far
+                if (l.p1.y >= maxY) {
+                    break;
+                }
+
+
+                long wallMinX = Math.min(l.p1.x, l.p2.x);
+                long wallMaxX = Math.max(l.p1.x, l.p2.x);
+
+                // Overlap?
+                if (wallMinX < maxX && wallMaxX > minX) {
+                    return 0;
+                }
+            }
+
+            return (maxX - minX + 1) * (maxY - minY + 1);
         }
     }
 }
