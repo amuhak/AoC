@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/2023/2023.iml" filepath="$PROJECT_DIR$/src/2023/2023.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/2024/2024.iml" filepath="$PROJECT_DIR$/src/2024/2024.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/2025/2025.iml" filepath="$PROJECT_DIR$/src/2025/2025.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AoC.iml" filepath="$PROJECT_DIR$/.idea/AoC.iml" />
+    </modules>
+  </component>
+</project>
