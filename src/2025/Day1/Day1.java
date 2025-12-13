@@ -15,11 +15,12 @@ public class Day1 {
         int position = 50;
         int ans = 0;
         for (var move : input) {
+            int old = position;
             position += move;
-            position += 100;
-            position %= 100;
-            if (position == 0) {
-                ans++;
+            if (move > 0) {
+                ans += Math.floorDiv(position, 100) - Math.floorDiv(old, 100);
+            } else {
+                ans += Math.floorDiv(old - 1, 100) - Math.floorDiv(position - 1, 100);
             }
         }
         System.out.println("Answer: " + ans);
