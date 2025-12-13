@@ -26,7 +26,16 @@ public class Day2 {
     }
 
     static boolean isError(String number) {
-        return number.substring(0, number.length() / 2)
-                .equals(number.substring(number.length() / 2));
+        for (int i = 1; i <= number.length() / 2; i++) {
+            if (number.length() % i != 0) {
+                continue;
+            }
+            var pattern = number.substring(0, i);
+            var repeated = pattern.repeat(number.length() / i);
+            if (repeated.equals(number)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
