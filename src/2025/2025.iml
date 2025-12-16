@@ -16,6 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Day1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Day12" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Day2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Day5" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
