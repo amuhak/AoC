@@ -7,24 +7,35 @@ public class Day5 {
     static void main() throws FileNotFoundException {
         var start = System.nanoTime();
         ArrayList<Range> ranges = new ArrayList<>();
-        ArrayList<Long> numbers = new ArrayList<>();
         new BufferedReader(new FileReader("input.txt")).lines()
                 .forEach(line -> {
                     if (!line.isEmpty()) {
                         if (line.contains("-")) {
                             var parts = line.split("-");
                             ranges.add(new Range(Long.parseLong(parts[0]), Long.parseLong(parts[1])));
-                        } else {
-                            numbers.add(Long.parseLong(line));
                         }
                     }
                 });
 
-        long count = numbers.stream()
-                .filter(num -> ranges.stream().anyMatch(range -> range.contains(num)))
-                .count();
+        int n = ranges.size();
 
-        System.out.println("Count: " + count);
+        for (int iteration = 0; iteration < n; iteration++) {
+            for (int i = 0; i < ranges.size(); i++) {
+                for (int j = i + 1; j < ranges.size(); j++) {
+                    if (ranges.get(i)
+                            .overlaps(ranges.get(j))) {
+                        ranges.get(i)
+                                .merge(ranges.get(j));
+                        ranges.remove(j);
+                        j--;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Sum of ranges: " + ranges.stream()
+                .mapToLong(Range::size)
+                .sum());
         var end = System.nanoTime();
         System.out.println("Time: " + (end - start) / 1_000_000 + " ms");
     }
@@ -38,8 +49,17 @@ public class Day5 {
             this.end = end;
         }
 
-        boolean contains(long value) {
-            return value >= start && value <= end;
+        boolean overlaps(Range other) {
+            return this.start <= other.end && other.start <= this.end;
+        }
+
+        void merge(Range other) {
+            this.start = Math.min(this.start, other.start);
+            this.end = Math.max(this.end, other.end);
+        }
+
+        long size() {
+            return end - start + 1;
         }
     }
 }
