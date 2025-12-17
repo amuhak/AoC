@@ -96,7 +96,7 @@ static class Machine {
 
 static class Problem {
     int[][] A;
-    int[]  b;
+    int[] b;
 
     Problem(int[][] A, int[] b) {
         this.A = A;
@@ -111,6 +111,7 @@ static class Problem {
      * b is the vector that holds all the voltages (where we want to get to).
      * x is the vector that holds the number of presses for each button to reach the voltages in b.
      * x is unknown and to be solved for.
+     *
      * @return An array of integers representing the solution, or an empty array if no solution exists.
      */
     int[] solveWithZ3() {

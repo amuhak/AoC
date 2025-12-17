@@ -1,3 +1,5 @@
+package year2025;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -6,7 +8,7 @@ public class Day7 {
     static Node[][] grid;
     static long[][] memo;
 
-    public static void main(String[] args) throws FileNotFoundException {
+    static void main() throws FileNotFoundException {
         var start = System.nanoTime();
         var input = new BufferedReader(new FileReader("input.txt"));
         grid = input.lines()

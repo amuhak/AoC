@@ -1,3 +1,5 @@
+package year2025;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -5,7 +7,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Day8 {
-    public static void main(String[] args) throws FileNotFoundException {
+    static void main() throws FileNotFoundException {
         var start = System.nanoTime();
         var input = new BufferedReader(new FileReader("input.txt")).lines()
                 .map(line -> line.split(","))
