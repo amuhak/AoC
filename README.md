@@ -1,4 +1,4 @@
-# 2023 AoC Solutions
+# AoC Solutions
 
 ***
 
